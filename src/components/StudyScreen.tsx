@@ -221,7 +221,7 @@ export const StudyScreen: React.FC<StudyScreenProps> = ({
             onClick={() => {
               if (!isAnswerShown) setIsAnswerShown(true);
             }}
-            className="w-full max-w-xl flex-1 max-h-[75vh] bg-white dark:bg-ios-darkCard rounded-3xl p-6 sm:p-8 shadow-sm border border-neutral-200/80 dark:border-neutral-800/80 flex flex-col justify-between overflow-y-auto cursor-pointer transition-all"
+            className="w-full max-w-xl flex-1 max-h-[calc(100dvh-160px)] bg-white dark:bg-ios-darkCard rounded-3xl p-5 sm:p-7 shadow-sm border border-neutral-200/80 dark:border-neutral-800/80 flex flex-col justify-between overflow-y-auto cursor-pointer transition-all"
           >
             {/* Card Header Info */}
             <div className="flex items-center justify-between text-xs text-neutral-400 mb-4 pb-2 border-b border-neutral-100 dark:border-neutral-800">
@@ -296,15 +296,15 @@ export const StudyScreen: React.FC<StudyScreenProps> = ({
         )}
       </div>
 
-      {/* iOS Bottom Action Bar */}
-      <div className="ios-glass border-t border-neutral-200/80 dark:border-neutral-800/80 px-4 pt-3 pb-safe-bottom z-20">
-        <div className="max-w-xl mx-auto mb-2">
-          {currentCard ? (
-            !isAnswerShown ? (
+      {/* iOS Bottom Action Bar - Docked flush to bottom without chin */}
+      {currentCard && (
+        <div className="ios-glass flex-shrink-0 border-t border-neutral-200/80 dark:border-neutral-800/80 px-4 pt-2.5 pb-safe z-20">
+          <div className="max-w-xl mx-auto">
+            {!isAnswerShown ? (
               /* Show Answer Button */
               <button
                 onClick={() => setIsAnswerShown(true)}
-                className="w-full py-4 rounded-2xl bg-ios-blue text-white font-semibold text-base shadow-lg shadow-blue-500/20 active:scale-[0.98] transition-transform"
+                className="w-full py-3.5 rounded-2xl bg-ios-blue text-white font-semibold text-base shadow-md shadow-blue-500/20 active:scale-[0.98] transition-transform"
               >
                 Show Answer
               </button>
@@ -314,7 +314,7 @@ export const StudyScreen: React.FC<StudyScreenProps> = ({
                 {/* Again Button */}
                 <button
                   onClick={() => onAnswerCard(currentCard, 1)}
-                  className="flex flex-col items-center justify-center py-2.5 rounded-2xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900/50 text-ios-red active:scale-95 transition-transform"
+                  className="flex flex-col items-center justify-center py-2 rounded-2xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900/50 text-ios-red active:scale-95 transition-transform"
                 >
                   <span className="text-[11px] font-mono font-medium opacity-80">
                     {intervals?.again}
@@ -325,7 +325,7 @@ export const StudyScreen: React.FC<StudyScreenProps> = ({
                 {/* Hard Button */}
                 <button
                   onClick={() => onAnswerCard(currentCard, 2)}
-                  className="flex flex-col items-center justify-center py-2.5 rounded-2xl bg-orange-50 dark:bg-orange-950/40 border border-orange-200 dark:border-orange-900/50 text-ios-orange active:scale-95 transition-transform"
+                  className="flex flex-col items-center justify-center py-2 rounded-2xl bg-orange-50 dark:bg-orange-950/40 border border-orange-200 dark:border-orange-900/50 text-ios-orange active:scale-95 transition-transform"
                 >
                   <span className="text-[11px] font-mono font-medium opacity-80">
                     {intervals?.hard}
@@ -336,7 +336,7 @@ export const StudyScreen: React.FC<StudyScreenProps> = ({
                 {/* Good Button */}
                 <button
                   onClick={() => onAnswerCard(currentCard, 3)}
-                  className="flex flex-col items-center justify-center py-2.5 rounded-2xl bg-green-50 dark:bg-green-950/40 border border-green-200 dark:border-green-900/50 text-ios-green active:scale-95 transition-transform"
+                  className="flex flex-col items-center justify-center py-2 rounded-2xl bg-green-50 dark:bg-green-950/40 border border-green-200 dark:border-green-900/50 text-ios-green active:scale-95 transition-transform"
                 >
                   <span className="text-[11px] font-mono font-medium opacity-80">
                     {intervals?.good}
@@ -347,7 +347,7 @@ export const StudyScreen: React.FC<StudyScreenProps> = ({
                 {/* Easy Button */}
                 <button
                   onClick={() => onAnswerCard(currentCard, 4)}
-                  className="flex flex-col items-center justify-center py-2.5 rounded-2xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900/50 text-ios-blue active:scale-95 transition-transform"
+                  className="flex flex-col items-center justify-center py-2 rounded-2xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900/50 text-ios-blue active:scale-95 transition-transform"
                 >
                   <span className="text-[11px] font-mono font-medium opacity-80">
                     {intervals?.easy}
@@ -355,12 +355,10 @@ export const StudyScreen: React.FC<StudyScreenProps> = ({
                   <span className="text-xs font-bold">Easy</span>
                 </button>
               </div>
-            )
-          ) : (
-            <div className="h-12" />
-          )}
+            )}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

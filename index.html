@@ -17,9 +17,12 @@
     <link rel="apple-touch-icon" href="anki-icon.svg" />
     
     <style>
-      /* Prevent elastic bounce on iOS Safari */
-      html, body {
+      /* Prevent elastic bounce and viewport chin on iOS Safari */
+      html, body, #root {
         height: 100%;
+        height: 100dvh;
+        margin: 0;
+        padding: 0;
         overflow: hidden;
         overscroll-behavior: none;
         -webkit-touch-callout: none;

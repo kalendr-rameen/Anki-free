@@ -87,15 +87,15 @@ export const DeckList: React.FC<DeckListProps> = ({
       </div>
 
       {/* Main List Area */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4 pb-28">
+      <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3">
         
-        {/* Anki Header Column Labels */}
-        <div className="flex items-center justify-between px-3 text-[11px] font-semibold tracking-wider uppercase text-neutral-400">
+        {/* Anki Header Column Labels - Perfectly aligned over numbers */}
+        <div className="flex items-center justify-between px-4 text-[11px] font-bold tracking-wider uppercase text-neutral-400 dark:text-neutral-500">
           <span>Deck Name</span>
-          <div className="flex items-center gap-3 w-28 justify-end">
-            <span className="text-blue-500 w-7 text-center">New</span>
-            <span className="text-orange-500 w-7 text-center">Learn</span>
-            <span className="text-green-500 w-7 text-center">Due</span>
+          <div className="flex items-center gap-2 justify-end pr-9">
+            <span className="text-blue-500 w-8 text-center font-bold">New</span>
+            <span className="text-orange-500 w-8 text-center font-bold">Learn</span>
+            <span className="text-green-500 w-8 text-center font-bold">Due</span>
           </div>
         </div>
 
@@ -103,7 +103,6 @@ export const DeckList: React.FC<DeckListProps> = ({
         <div className="bg-white dark:bg-ios-darkCard rounded-2xl shadow-sm border border-neutral-200/80 dark:border-neutral-800/80 divide-y divide-neutral-100 dark:divide-neutral-800/80 overflow-hidden">
           {decks.map((deck) => {
             const counts = getCounts(deck.id);
-            const totalDue = counts.newCount + counts.learnCount + counts.dueCount;
 
             return (
               <div
@@ -114,7 +113,7 @@ export const DeckList: React.FC<DeckListProps> = ({
                   onClick={() => onSelectDeck(deck.id)}
                   className="flex items-center justify-between p-4 cursor-pointer select-none"
                 >
-                  <div className="flex-1 min-w-0 pr-4">
+                  <div className="flex-1 min-w-0 pr-3">
                     <div className="flex items-center gap-2">
                       <span className="text-base font-semibold text-neutral-900 dark:text-neutral-100 truncate">
                         {deck.name}
@@ -130,30 +129,30 @@ export const DeckList: React.FC<DeckListProps> = ({
                     </span>
                   </div>
 
-                  {/* Anki Triple Counter Badges */}
-                  <div className="flex items-center gap-3 w-28 justify-end flex-shrink-0">
+                  {/* Anki Triple Counter Badges - w-8 matching header columns */}
+                  <div className="flex items-center gap-2 justify-end flex-shrink-0">
                     <span
-                      className={`text-sm font-semibold w-7 text-center ${
+                      className={`text-sm font-bold w-8 text-center ${
                         counts.newCount > 0
-                          ? 'text-blue-600 dark:text-blue-400 font-bold'
+                          ? 'text-blue-600 dark:text-blue-400'
                           : 'text-neutral-300 dark:text-neutral-700'
                       }`}
                     >
                       {counts.newCount}
                     </span>
                     <span
-                      className={`text-sm font-semibold w-7 text-center ${
+                      className={`text-sm font-bold w-8 text-center ${
                         counts.learnCount > 0
-                          ? 'text-orange-600 dark:text-orange-400 font-bold'
+                          ? 'text-orange-600 dark:text-orange-400'
                           : 'text-neutral-300 dark:text-neutral-700'
                       }`}
                     >
                       {counts.learnCount}
                     </span>
                     <span
-                      className={`text-sm font-semibold w-7 text-center ${
+                      className={`text-sm font-bold w-8 text-center ${
                         counts.dueCount > 0
-                          ? 'text-green-600 dark:text-green-400 font-bold'
+                          ? 'text-green-600 dark:text-green-400'
                           : 'text-neutral-300 dark:text-neutral-700'
                       }`}
                     >
@@ -161,8 +160,8 @@ export const DeckList: React.FC<DeckListProps> = ({
                     </span>
                   </div>
 
-                  {/* Chevron / Delete option */}
-                  <div className="ml-2 flex items-center">
+                  {/* More button - fixed w-7 ml-2 to guarantee exact header pr-9 alignment */}
+                  <div className="w-7 flex items-center justify-end ml-2">
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
@@ -226,9 +225,9 @@ export const DeckList: React.FC<DeckListProps> = ({
         )}
       </div>
 
-      {/* iOS Bottom Tab Bar */}
-      <div className="ios-glass fixed bottom-0 left-0 right-0 z-20 border-t border-neutral-200/80 dark:border-neutral-800/80 px-6 pt-2 pb-safe-bottom">
-        <div className="flex items-center justify-around h-14 max-w-lg mx-auto">
+      {/* iOS Bottom Tab Bar - Flush to bottom without chin */}
+      <div className="ios-glass flex-shrink-0 border-t border-neutral-200/80 dark:border-neutral-800/80 px-6 pt-1.5 pb-safe z-20">
+        <div className="flex items-center justify-around h-12 max-w-lg mx-auto">
           <button
             onClick={() => {}}
             className="flex flex-col items-center gap-1 text-ios-blue"
