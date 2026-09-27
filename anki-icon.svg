@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="ankiGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0A84FF"/>
+      <stop offset="100%" stop-color="#0055D4"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="16" stdDeviation="20" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  <!-- iOS Squircle Shape -->
+  <rect width="512" height="512" rx="115" fill="url(#ankiGrad)"/>
+  
+  <!-- Classic Anki White Star / Flashcard symbol -->
+  <g filter="url(#shadow)">
+    <!-- Back card -->
+    <rect x="110" y="100" width="260" height="180" rx="20" fill="white" opacity="0.3" transform="rotate(-8 240 190)"/>
+    <!-- Front card -->
+    <rect x="136" y="126" width="240" height="260" rx="28" fill="#FFFFFF"/>
+    <!-- Iconic Blue Star on Card -->
+    <path d="M 256,190 L 273,235 L 322,238 L 284,269 L 297,316 L 256,288 L 215,316 L 228,269 L 190,238 L 239,235 Z" fill="#0A84FF"/>
+  </g>
+</svg>

@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>Anki Mobile</title>
+    
+    <!-- iOS / iPadOS PWA Support -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Anki" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="theme-color" content="#007AFF" />
+
+    <link rel="icon" type="image/svg+xml" href="anki-icon.svg" />
+    <link rel="apple-touch-icon" href="anki-icon.svg" />
+    
+    <style>
+      /* Prevent elastic bounce on iOS Safari */
+      html, body {
+        height: 100%;
+        overflow: hidden;
+        overscroll-behavior: none;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+             user-select: none;
+        -webkit-tap-highlight-color: transparent;
+      }
+      /* Allow text selection inside card content and inputs */
+      input, textarea, .selectable-text {
+        -webkit-user-select: text;
+        -moz-user-select: text;
+             user-select: text;
+      }
+    </style>
+    <script type="module" crossorigin src="./assets/index-Cy3J1J-S.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-DRp4CdEO.css">
+  <link rel="manifest" href="./manifest.webmanifest"></head>
+  <body class="bg-ios-bg dark:bg-ios-darkBg text-neutral-900 dark:text-neutral-100 font-sans antialiased selection:bg-ios-blue selection:text-white">
+    <div id="root" class="h-full w-full"></div>
+  </body>
+</html>
