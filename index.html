@@ -17,9 +17,12 @@
     <link rel="apple-touch-icon" href="anki-icon.svg" />
     
     <style>
-      /* Prevent elastic bounce on iOS Safari */
-      html, body {
+      /* Prevent elastic bounce and viewport chin on iOS Safari */
+      html, body, #root {
         height: 100%;
+        height: 100dvh;
+        margin: 0;
+        padding: 0;
         overflow: hidden;
         overscroll-behavior: none;
         -webkit-touch-callout: none;
@@ -35,8 +38,8 @@
              user-select: text;
       }
     </style>
-    <script type="module" crossorigin src="./assets/index-Cy3J1J-S.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-DRp4CdEO.css">
+    <script type="module" crossorigin src="./assets/index-DlQU_QxD.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-DBkErZuE.css">
   <link rel="manifest" href="./manifest.webmanifest"></head>
   <body class="bg-ios-bg dark:bg-ios-darkBg text-neutral-900 dark:text-neutral-100 font-sans antialiased selection:bg-ios-blue selection:text-white">
     <div id="root" class="h-full w-full"></div>
