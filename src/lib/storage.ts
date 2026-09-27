@@ -241,16 +241,33 @@ const SAMPLE_CARDS: Card[] = [
   },
 ];
 
+import { ICLOUD_DECKS, ICLOUD_CARDS } from './userDecks';
+
+const INITIAL_DECKS: Deck[] = [...ICLOUD_DECKS, ...SAMPLE_DECKS];
+const INITIAL_CARDS: Card[] = [...ICLOUD_CARDS, ...SAMPLE_CARDS];
+
 export function getDecks(): Deck[] {
   const data = localStorage.getItem(DECKS_KEY);
   if (!data) {
-    localStorage.setItem(DECKS_KEY, JSON.stringify(SAMPLE_DECKS));
-    return SAMPLE_DECKS;
+    localStorage.setItem(DECKS_KEY, JSON.stringify(INITIAL_DECKS));
+    return INITIAL_DECKS;
   }
   try {
-    return JSON.parse(data);
+    const parsed: Deck[] = JSON.parse(data);
+    // Ensure all iCloud decks exist
+    let changed = false;
+    for (const d of ICLOUD_DECKS) {
+      if (!parsed.some(p => p.id === d.id)) {
+        parsed.unshift(d);
+        changed = true;
+      }
+    }
+    if (changed) {
+      localStorage.setItem(DECKS_KEY, JSON.stringify(parsed));
+    }
+    return parsed;
   } catch {
-    return SAMPLE_DECKS;
+    return INITIAL_DECKS;
   }
 }
 
@@ -261,13 +278,26 @@ export function saveDecks(decks: Deck[]): void {
 export function getCards(): Card[] {
   const data = localStorage.getItem(CARDS_KEY);
   if (!data) {
-    localStorage.setItem(CARDS_KEY, JSON.stringify(SAMPLE_CARDS));
-    return SAMPLE_CARDS;
+    localStorage.setItem(CARDS_KEY, JSON.stringify(INITIAL_CARDS));
+    return INITIAL_CARDS;
   }
   try {
-    return JSON.parse(data);
+    const parsed: Card[] = JSON.parse(data);
+    // Ensure all iCloud cards exist
+    let changed = false;
+    const existingIds = new Set(parsed.map(c => c.id));
+    for (const c of ICLOUD_CARDS) {
+      if (!existingIds.has(c.id)) {
+        parsed.push(c);
+        changed = true;
+      }
+    }
+    if (changed) {
+      localStorage.setItem(CARDS_KEY, JSON.stringify(parsed));
+    }
+    return parsed;
   } catch {
-    return SAMPLE_CARDS;
+    return INITIAL_CARDS;
   }
 }
 
