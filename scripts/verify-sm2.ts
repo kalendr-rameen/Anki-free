@@ -64,6 +64,40 @@ let lowEaseCard: Card = { ...reviewedCard, easeFactor: 1.35 };
 lowEaseCard = scheduleCard(lowEaseCard, 1);
 assert(lowEaseCard.easeFactor === MIN_EASE_FACTOR, `Ease factor should not drop below ${MIN_EASE_FACTOR}, got ${lowEaseCard.easeFactor}`);
 
+// 7. Test Adaptive Interval Reduction (User struggles with "Again" 3 times)
+console.log('\n--- Testing Adaptive Again/Hard Penalties ---');
+let strugglingCard: Card = {
+  ...testCard,
+  id: 'struggle-1',
+  easeFactor: INITIAL_EASE_FACTOR,
+  step: 0,
+  againCount: 0,
+};
+
+// Press Again 3 times
+strugglingCard = scheduleCard(strugglingCard, 1);
+strugglingCard = scheduleCard(strugglingCard, 1);
+strugglingCard = scheduleCard(strugglingCard, 1);
+
+assert(strugglingCard.againCount === 3, `Again count should be 3, got ${strugglingCard.againCount}`);
+assert(strugglingCard.lapses === 3, `Lapses should be 3, got ${strugglingCard.lapses}`);
+assert(strugglingCard.easeFactor === 2.05, `Ease factor should drop from 2.50 to 2.05, got ${strugglingCard.easeFactor}`);
+
+// Advance step 0 -> step 1 with Good
+strugglingCard = scheduleCard(strugglingCard, 3);
+assert(strugglingCard.step === 1, 'Should advance to step 1');
+
+// Check preview on step 1: Good should preview <6h instead of 1d because of struggle
+const previewAfterStruggle = calculateNextIntervals(strugglingCard);
+assert(previewAfterStruggle.good === '<6h', `Preview for Good after 3 Agains should be <6h, got ${previewAfterStruggle.good}`);
+
+// Now graduate with Good
+const graduatedStrugglingCard = scheduleCard(strugglingCard, 3);
+assert(graduatedStrugglingCard.state === 'review', 'Should graduate to review');
+assert(graduatedStrugglingCard.interval === 0.25, `Graduated interval should be 0.25 days (6h), got ${graduatedStrugglingCard.interval}`);
+assert(graduatedStrugglingCard.interval < graduatedCard.interval, 'Interval after 3 Agains should be significantly less than clean graduation (0.25d < 1d)');
+assert(graduatedStrugglingCard.againCount === 0, 'Struggle counters reset on graduation');
+
 console.log('\n--- Testing Cloze Deletion Engine ---');
 const clozeText = 'The capital of Australia is {{c1::Canberra::capital}} and largest city is {{c2::Sydney}}.';
 assert(hasCloze(clozeText), 'hasCloze should return true');

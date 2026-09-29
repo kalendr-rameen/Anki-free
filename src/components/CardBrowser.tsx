@@ -21,15 +21,44 @@ export const CardBrowser: React.FC<CardBrowserProps> = ({
 }) => {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedDeckId, setSelectedDeckId] = useState<string>('all');
+  const [selectedCategory, setSelectedCategory] = useState<'all' | 'new' | 'learning' | 'review'>('all');
 
   const deckMap = useMemo(() => {
     return new Map(decks.map(d => [d.id, d.name]));
   }, [decks]);
 
+  const categoryCounts = useMemo(() => {
+    const relevantCards = selectedDeckId === 'all'
+      ? cards
+      : cards.filter(c => c.deckId === selectedDeckId);
+
+    let newCount = 0;
+    let learningCount = 0;
+    let reviewCount = 0;
+
+    for (const card of relevantCards) {
+      if (card.state === 'new') newCount++;
+      else if (card.state === 'learning' || card.state === 'relearning') learningCount++;
+      else if (card.state === 'review') reviewCount++;
+    }
+
+    return {
+      all: relevantCards.length,
+      new: newCount,
+      learning: learningCount,
+      review: reviewCount,
+    };
+  }, [cards, selectedDeckId]);
+
   const filteredCards = useMemo(() => {
     return cards.filter((card) => {
       if (selectedDeckId !== 'all' && card.deckId !== selectedDeckId) {
         return false;
+      }
+      if (selectedCategory !== 'all') {
+        if (selectedCategory === 'new' && card.state !== 'new') return false;
+        if (selectedCategory === 'learning' && card.state !== 'learning' && card.state !== 'relearning') return false;
+        if (selectedCategory === 'review' && card.state !== 'review') return false;
       }
       if (!searchQuery.trim()) return true;
 
@@ -40,12 +69,12 @@ export const CardBrowser: React.FC<CardBrowserProps> = ({
 
       return inFront || inBack || inTags;
     });
-  }, [cards, selectedDeckId, searchQuery]);
+  }, [cards, selectedDeckId, selectedCategory, searchQuery]);
 
   return (
     <div className="flex flex-col h-full bg-ios-bg dark:bg-ios-darkBg">
       {/* iOS Top Navigation Bar */}
-      <div className="ios-glass sticky top-0 z-20 border-b border-neutral-200 dark:border-neutral-800 px-4 pt- safe-top pb-3">
+      <div className="ios-glass sticky top-0 z-20 border-b border-neutral-200 dark:border-neutral-800 px-4 pt-safe-top pb-3">
         <div className="flex items-center justify-between h-12">
           <button
             onClick={onBack}
@@ -104,6 +133,53 @@ export const CardBrowser: React.FC<CardBrowserProps> = ({
                 {deck.name}
               </button>
             ))}
+          </div>
+
+          {/* Category Filter */}
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar">
+            <button
+              onClick={() => setSelectedCategory('all')}
+              className={`px-2.5 py-1 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors ${
+                selectedCategory === 'all'
+                  ? 'bg-neutral-800 text-white dark:bg-neutral-200 dark:text-neutral-900'
+                  : 'bg-neutral-200/60 dark:bg-neutral-800/60 text-neutral-600 dark:text-neutral-400'
+              }`}
+            >
+              All ({categoryCounts.all})
+            </button>
+            <button
+              onClick={() => setSelectedCategory('new')}
+              className={`px-2.5 py-1 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors flex items-center gap-1.5 ${
+                selectedCategory === 'new'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400'
+              }`}
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
+              New ({categoryCounts.new})
+            </button>
+            <button
+              onClick={() => setSelectedCategory('learning')}
+              className={`px-2.5 py-1 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors flex items-center gap-1.5 ${
+                selectedCategory === 'learning'
+                  ? 'bg-orange-600 text-white'
+                  : 'bg-orange-50 dark:bg-orange-950/40 text-orange-600 dark:text-orange-400'
+              }`}
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-orange-500" />
+              Learning ({categoryCounts.learning})
+            </button>
+            <button
+              onClick={() => setSelectedCategory('review')}
+              className={`px-2.5 py-1 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors flex items-center gap-1.5 ${
+                selectedCategory === 'review'
+                  ? 'bg-green-600 text-white'
+                  : 'bg-green-50 dark:bg-green-950/40 text-green-600 dark:text-green-400'
+              }`}
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-green-500" />
+              Review ({categoryCounts.review})
+            </button>
           </div>
         </div>
       </div>

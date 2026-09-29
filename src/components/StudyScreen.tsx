@@ -66,6 +66,28 @@ export const StudyScreen: React.FC<StudyScreenProps> = ({
     }
   }, [currentCard, queue.length]);
 
+  const sessionCounts = useMemo(() => {
+    let newCount = 0;
+    let learnCount = 0;
+    let dueCount = 0;
+
+    for (const card of queue) {
+      if (card.state === 'new') {
+        newCount++;
+      } else if (card.state === 'learning' || card.state === 'relearning') {
+        learnCount++;
+      } else if (card.state === 'review') {
+        dueCount++;
+      }
+    }
+
+    return {
+      newCount,
+      learnCount,
+      dueCount,
+    };
+  }, [queue]);
+
   const intervals = useMemo(() => {
     if (!currentCard) return null;
     return calculateNextIntervals(currentCard);
@@ -145,11 +167,11 @@ export const StudyScreen: React.FC<StudyScreenProps> = ({
           {/* Center Queue Counter Badges */}
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-1.5 bg-neutral-200/60 dark:bg-neutral-800/60 px-2.5 py-1 rounded-full text-xs font-semibold">
-              <span className="text-blue-600 dark:text-blue-400">{counts.newCount}</span>
+              <span className="text-blue-600 dark:text-blue-400" title="New cards remaining">{sessionCounts.newCount}</span>
               <span className="text-neutral-400">·</span>
-              <span className="text-orange-600 dark:text-orange-400">{counts.learnCount}</span>
+              <span className="text-orange-600 dark:text-orange-400" title="Learning cards remaining">{sessionCounts.learnCount}</span>
               <span className="text-neutral-400">·</span>
-              <span className="text-green-600 dark:text-green-400">{counts.dueCount}</span>
+              <span className="text-green-600 dark:text-green-400" title="Review cards remaining">{sessionCounts.dueCount}</span>
             </div>
           </div>
 

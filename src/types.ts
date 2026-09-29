@@ -19,6 +19,8 @@ export interface Card {
   due: number;           // Millisecond timestamp when card is due
   createdAt: number;
   lastReviewedAt?: number;
+  againCount?: number;   // Number of times "Again" was pressed in current cycle
+  hardCount?: number;    // Number of times "Hard" was pressed in current cycle
 }
 
 export interface Deck {

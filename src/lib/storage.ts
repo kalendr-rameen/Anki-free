@@ -66,14 +66,14 @@ const SAMPLE_CARDS: Card[] = [
     back: 'Nice to meet you / A pleasure',
     type: 'basic',
     tags: ['phrases', 'basics'],
-    state: 'new',
-    step: 0,
-    reps: 0,
+    state: 'learning',
+    step: 1,
+    reps: 1,
     lapses: 0,
     interval: 0,
     easeFactor: INITIAL_EASE_FACTOR,
-    due: Date.now(),
-    createdAt: Date.now(),
+    due: Date.now() - 60000,
+    createdAt: Date.now() - 86400000,
   },
   {
     id: 'sp-3',
@@ -82,14 +82,14 @@ const SAMPLE_CARDS: Card[] = [
     back: 'Please and thank you',
     type: 'basic',
     tags: ['politeness'],
-    state: 'new',
+    state: 'review',
     step: 0,
-    reps: 0,
+    reps: 2,
     lapses: 0,
-    interval: 0,
+    interval: 3,
     easeFactor: INITIAL_EASE_FACTOR,
-    due: Date.now(),
-    createdAt: Date.now(),
+    due: Date.now() - 3600000,
+    createdAt: Date.now() - 86400000 * 2,
   },
   {
     id: 'sp-4',
@@ -214,14 +214,14 @@ const SAMPLE_CARDS: Card[] = [
     back: 'It has the thickest muscular myocardium to overcome systemic arterial resistance.',
     type: 'cloze',
     tags: ['cardiology', 'circulatory'],
-    state: 'new',
+    state: 'learning',
     step: 0,
     reps: 0,
-    lapses: 0,
+    lapses: 1,
     interval: 0,
-    easeFactor: INITIAL_EASE_FACTOR,
-    due: Date.now(),
-    createdAt: Date.now(),
+    easeFactor: 2.35,
+    due: Date.now() - 60000,
+    createdAt: Date.now() - 86400000,
   },
   {
     id: 'med-3',
@@ -230,14 +230,14 @@ const SAMPLE_CARDS: Card[] = [
     back: 'Dopamine (produced in the substantia nigra pars compacta).',
     type: 'basic',
     tags: ['neuroscience', 'pharmacology'],
-    state: 'new',
+    state: 'review',
     step: 0,
-    reps: 0,
+    reps: 4,
     lapses: 0,
-    interval: 0,
-    easeFactor: INITIAL_EASE_FACTOR,
-    due: Date.now(),
-    createdAt: Date.now(),
+    interval: 25,
+    easeFactor: 2.65,
+    due: Date.now() - 7200000,
+    createdAt: Date.now() - 86400000 * 30,
   },
 ];
 
@@ -307,25 +307,29 @@ export function saveCards(cards: Card[]): void {
 
 export function getDeckCounts(deckId: string): DeckCounts {
   const cards = getCards().filter(c => c.deckId === deckId);
-  const now = Date.now();
+  const deck = getDecks().find(d => d.id === deckId);
+  const endOfToday = new Date().setHours(23, 59, 59, 999);
 
-  let newCount = 0;
+  let unstudiedNew = 0;
   let learnCount = 0;
   let dueCount = 0;
 
   for (const card of cards) {
     if (card.state === 'new') {
-      newCount++;
+      unstudiedNew++;
     } else if (card.state === 'learning' || card.state === 'relearning') {
-      if (card.due <= now) {
+      if (card.due <= endOfToday) {
         learnCount++;
       }
     } else if (card.state === 'review') {
-      if (card.due <= now) {
+      if (card.due <= endOfToday) {
         dueCount++;
       }
     }
   }
+
+  const maxNew = deck?.newLimit ?? 20;
+  const newCount = Math.min(unstudiedNew, maxNew);
 
   return {
     newCount,
@@ -338,7 +342,7 @@ export function getDeckCounts(deckId: string): DeckCounts {
 export function getStudyQueue(deckId: string): Card[] {
   const cards = getCards().filter(c => c.deckId === deckId);
   const deck = getDecks().find(d => d.id === deckId);
-  const now = Date.now();
+  const endOfToday = new Date().setHours(23, 59, 59, 999);
 
   // Separate queues
   const learningDue: Card[] = [];
@@ -347,9 +351,9 @@ export function getStudyQueue(deckId: string): Card[] {
 
   for (const card of cards) {
     if (card.state === 'learning' || card.state === 'relearning') {
-      if (card.due <= now) learningDue.push(card);
+      if (card.due <= endOfToday) learningDue.push(card);
     } else if (card.state === 'review') {
-      if (card.due <= now) reviewDue.push(card);
+      if (card.due <= endOfToday) reviewDue.push(card);
     } else if (card.state === 'new') {
       newCards.push(card);
     }
